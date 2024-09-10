@@ -1,0 +1,130 @@
+{
+  "basics": {
+    "name": "Marshall Johnston",
+    "email": "marshalljohnston77@gmail.com",
+    "profiles": [
+      {
+        "network": "GitHub",
+        "username": "caddieparker",
+        "url": "https://github.com/caddieparker"
+      },
+      {
+        "network": "LinkedIn",
+        "username": "marshalljohnston",
+        "url": "https://linkedin.com/in/marshalljohnston"
+      }
+    ],
+    "summary": "Product leader with expertise in product management, technical leadership, and entrepreneurship. Proven track record in fundraising, market research, and building AI-powered applications to scale businesses."
+  },
+  "work": [
+    {
+      "name": "Caddie Software",
+      "position": "Co-Founder, Head of Product",
+      "startDate": "2022-05-01",
+      "summary": "Leading product strategy and development for AI-powered applications.",
+      "highlights": [
+        "Secured $3.5M+ in pre-seed and seed funding by delivering compelling market research and a strategic business plan.",
+        "Accepted into Y Combinator’s S22 cohort by showcasing an innovative solution to a prevalent sales operations challenge.",
+        "Launched 4 AI-powered applications, generating $360K+ in MRR with <5% monthly churn.",
+        "Developed an AI email client that aimed to boost deal velocity by 25% and reduced opportunity-to-win time by 20%.",
+        "Conducted 200+ user interviews and led iterative prototyping, improving customer retention and satisfaction.",
+        "Defined and executed a long-term product strategy, resulting in a 40% increase in customer acquisition over 12 months."
+      ]
+    },
+    {
+      "name": "NinjaCat",
+      "position": "Technical Product Manager",
+      "startDate": "2020-10-01",
+      "endDate": "2022-06-01",
+      "summary": "Led product development and strategic initiatives for technical products.",
+      "highlights": [
+        "Led the roadmap, development, and launch of a no-code SQL builder, increasing non-technical user engagement by 100%.",
+        "Reduced data warehousing costs by $60K through a proprietary Snowflake management service.",
+        "Reduced churn by 10% by prioritizing business-critical integrations and maintaining 99.99% uptime.",
+        "Led a cross-functional team to bring a new product line to market, driving a 30% increase in revenue."
+      ]
+    },
+    {
+      "name": "Good Weekend Co.",
+      "position": "Co-Founder, Product Manager",
+      "startDate": "2019-08-01",
+      "endDate": "2022-04-01",
+      "summary": "Developed and scaled an award-winning travel booking platform with curated local experiences.",
+      "highlights": [
+        "Pioneered and scaled an award-winning travel booking platform with curated local experiences.",
+        "Monetized the platform through partnerships and grew a loyal Instagram following of 25K+.",
+        "Launched a high-converting e-commerce platform, achieving 800+ bookings and 750+ merchandise sales.",
+        "Migrated to Webflow, improving site speed and enabling non-technical updates by team members."
+      ]
+    },
+    {
+      "name": "FreshBooks",
+      "position": "Technical Lead, Partner Integrations",
+      "startDate": "2019-04-01",
+      "endDate": "2020-10-01",
+      "summary": "Led integration efforts and contributed to significant ARR growth.",
+      "highlights": [
+        "Managed P&L and deployed 5 key integrations, contributing $2.5M+ in ARR.",
+        "Increased mail integration profitability by 30% through strategic migrations and UX improvements.",
+        "Led the development of browser extensions and Postman collections, increasing API token generation by 18% YoY."
+      ]
+    },
+    {
+      "name": "MUX Awards",
+      "position": "Co-Founder, Program Director",
+      "startDate": "2018-03-01",
+      "endDate": "2020-03-01",
+      "summary": "Established an annual UX design awards program.",
+      "highlights": [
+        "Established an annual UX design awards program, generating revenue through submissions and partnerships.",
+        "Curated a judging panel including top industry leaders from Google, Airbnb, and Amazon.",
+        "Hosted an invite-only industry event for 100+ judges in the San Francisco Bay Area.",
+        "Received over 500 submissions from companies like Microsoft, Peloton, and Starbucks."
+      ]
+    }
+  ],
+  "education": [
+    {
+      "institution": "Y Combinator",
+      "area": "Startup Development",
+      "studyType": "S22 Batch",
+      "startDate": "2022-03-01",
+      "endDate": "2022-08-01"
+    },
+    {
+      "institution": "University of Toronto",
+      "area": "Front-End Web Development",
+      "studyType": "Certificate",
+      "startDate": "2017-01-01",
+      "endDate": "2018-01-01"
+    },
+    {
+      "institution": "Concordia University",
+      "area": "Political Science and Economics",
+      "studyType": "Bachelor",
+      "startDate": "2007-01-01",
+      "endDate": "2011-01-01"
+    }
+  ],
+  "skills": [
+    {
+      "name": "Web Development",
+      "level": "Master",
+      "keywords": [
+        "JavaScript",
+        "React",
+        "TypeScript",
+        "Next.js",
+        "NestJS",
+        "Node.js",
+        "Vercel",
+        "AWS",
+        "GCP",
+        "PostgreSQL",
+        "Git",
+        "Figma",
+        "ChatGPT"
+      ]
+    }
+  ]
+}
