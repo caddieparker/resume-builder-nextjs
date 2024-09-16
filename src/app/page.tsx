@@ -3,13 +3,29 @@
 import { FormEvent, useState } from "react";
 import { Textarea, Button, Container, Title, FileInput } from "@mantine/core";
 import "@mantine/core/styles.css";
+import { generateResumeDocx } from "../../lib/services/generateResumeDoc";
+//testing import
+import resume from "../../lib/data/resume.json" assert { type: "json" };
 
 export default function Home() {
   const [jobDescription, setJobDescription] = useState("");
   const [companyValues, setCompanyValues] = useState("");
-  const [afterJsonContent, setAfterJsonContent] = useState("");
   const [loading, setLoading] = useState(false);
   const [downloadUrl, setDownloadUrl] = useState<null | string>(null);
+
+  const generateDocTEST = async (e: FormEvent) => {
+    e.preventDefault;
+    try {
+      const buffer = await generateResumeDocx(resume);
+      console.log("buffer created", buffer);
+      const blob = new Blob([buffer]);
+      const url = window.URL.createObjectURL(blob);
+      console.log("new url created");
+      setDownloadUrl(url);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -25,10 +41,10 @@ export default function Home() {
       });
 
       const blob = await response.blob();
+      console.log("blob", blob);
       const url = window.URL.createObjectURL(blob);
+      console.log("url", url);
       setDownloadUrl(url);
-      const data = await response.json();
-      setAfterJsonContent(data.afterJsonContent);
     } catch (error) {
       console.error(error);
     }
@@ -38,6 +54,9 @@ export default function Home() {
 
   return (
     <Container>
+      <Button variant={"dark"} onClick={generateDocTEST} className={"my-5"}>
+        {loading ? "Updating..." : "Generate Test Doc"}
+      </Button>
       <Title order={1} my="md" className={"p-10"}>
         Resume Builder
       </Title>
@@ -49,7 +68,7 @@ export default function Home() {
       </Title>
       <FileInput disabled placeholder={"Click to add your resume"} />
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={generateDocTEST}>
         <Textarea
           className={"pt-5"}
           placeholder="add the company values here"
@@ -74,9 +93,7 @@ export default function Home() {
           {loading ? "Updating..." : "Submit Job Description"}
         </Button>
       </form>
-      {afterJsonContent && (
-        <Textarea value={afterJsonContent} readOnly rows={10} />
-      )}
+
       {downloadUrl && (
         <Button
           component="a"
