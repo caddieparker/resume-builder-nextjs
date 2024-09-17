@@ -3,7 +3,7 @@
 import { FormEvent, useState } from "react";
 import { Textarea, Button, Container, Title, FileInput } from "@mantine/core";
 import "@mantine/core/styles.css";
-import { generateResumeDocx } from "../../lib/services/generateResumeDoc";
+import { generateResumeDocx } from "../../lib/services/generateResume";
 //testing import
 import resume from "../../lib/data/resume.json" assert { type: "json" };
 
@@ -53,58 +53,59 @@ export default function Home() {
   };
 
   return (
-    <Container>
-      <Button variant={"dark"} onClick={generateDocTEST} className={"my-5"}>
-        {loading ? "Updating..." : "Generate Test Doc"}
-      </Button>
-      <Title order={1} my="md" className={"p-10"}>
-        Resume Builder
-      </Title>
-      <Title order={5}>
-        <span>
-          {`Upload your resume, paste a job description for the job you're looking
+    <div>
+      <Container>
+        <Button variant={"dark"} onClick={generateDocTEST} className={"my-5"}>
+          {loading ? "Updating..." : "Generate Test Doc"}
+        </Button>
+        <Title order={1} my="md" className={"p-10"}>
+          Resume Builder
+        </Title>
+        <Title order={5}>
+          <span>
+            {`Upload your resume, paste a job description for the job you're looking
           for.`}
-        </span>
-      </Title>
-      <FileInput disabled placeholder={"Click to add your resume"} />
+          </span>
+        </Title>
+        <FileInput disabled placeholder={"Click to add your resume"} />
 
-      <form onSubmit={generateDocTEST}>
-        <Textarea
-          className={"pt-5"}
-          placeholder="add the company values here"
-          value={companyValues}
-          onChange={(e) => setCompanyValues(e.target.value)}
-          label="Company Values"
-          required
-          minRows={10}
-          mb="md"
-        />
-        <Textarea
-          className={"pt-5"}
-          placeholder="Paste job description here"
-          value={jobDescription}
-          onChange={(e) => setJobDescription(e.target.value)}
-          label="Job Description"
-          required
-          minRows={10}
-          mb="md"
-        />
-        <Button type="submit" loading={loading} fullWidth variant={"filled"}>
-          {loading ? "Updating..." : "Submit Job Description"}
-        </Button>
-      </form>
+        <form onSubmit={generateDocTEST}>
+          <Textarea
+            className={"pt-5"}
+            placeholder="add the company values here"
+            value={companyValues}
+            onChange={(e) => setCompanyValues(e.target.value)}
+            label="Company Values"
+            minRows={10}
+            mb="md"
+          />
+          <Textarea
+            className={"pt-5"}
+            placeholder="Paste job description here"
+            value={jobDescription}
+            onChange={(e) => setJobDescription(e.target.value)}
+            label="Job Description"
+            required
+            minRows={10}
+            mb="md"
+          />
+          <Button type="submit" loading={loading} fullWidth variant={"filled"}>
+            {loading ? "Updating..." : "Submit Job Description"}
+          </Button>
+        </form>
 
-      {downloadUrl && (
-        <Button
-          component="a"
-          href={downloadUrl}
-          download="updated_resume.docx"
-          mt="md"
-          fullWidth
-        >
-          Download Updated Resume
-        </Button>
-      )}
-    </Container>
+        {downloadUrl && (
+          <Button
+            component="a"
+            href={downloadUrl}
+            download="updated_resume.docx"
+            mt="md"
+            fullWidth
+          >
+            Download Updated Resume
+          </Button>
+        )}
+      </Container>
+    </div>
   );
 }
