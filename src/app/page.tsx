@@ -67,7 +67,7 @@ export default function Home() {
           for.`}
           </span>
         </Title>
-        <FileInput disabled placeholder={"Click to add your resume"} />
+        <FileInput placeholder={"Click to add your resume"} />
 
         <form onSubmit={generateDocTEST}>
           <Textarea
