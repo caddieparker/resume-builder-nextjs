@@ -1,27 +1,71 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useState, useEffect } from "react";
 import { Textarea, Button, Container, Title, FileInput } from "@mantine/core";
 import "@mantine/core/styles.css";
+import { supabase } from "../../lib/supabaseClient"; // Import Supabase client
 import { generateResumeDocx } from "../../lib/services/generateResume";
-//testing import
+import { resumeToJson } from "../../lib/controllers/resumeToJson";
+
+// Testing import
 import resume from "../../lib/data/resume.json" assert { type: "json" };
 
 export default function Home() {
   const [jobDescription, setJobDescription] = useState("");
   const [companyValues, setCompanyValues] = useState("");
+  const [companyName, setCompanyName] = useState("");
+  const [file, setFile] = useState<File | null>(null);
+  const [jsonFile, setJsonFile] = useState<any | null>(null);
   const [loading, setLoading] = useState(false);
   const [downloadUrl, setDownloadUrl] = useState<null | string>(null);
+  const [session, setSession] = useState(null);
+
+  // useEffect(() => {
+  //   const fetchSession = async () => {
+  //     const { data } = await supabase.auth.getSession();
+  //     console.log("Session data:", data);
+  //     setSession((data.session as any) ?? null);
+  //   };
+  //   fetchSession();
+  // }, []);
 
   const generateDocTEST = async (e: FormEvent) => {
-    e.preventDefault;
+    e.preventDefault();
     try {
       const buffer = await generateResumeDocx(resume);
-      console.log("buffer created", buffer);
       const blob = new Blob([buffer]);
       const url = window.URL.createObjectURL(blob);
-      console.log("new url created");
       setDownloadUrl(url);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // const handleUpload = async () => {
+  //   if (file) {
+  //     const response = resumeToJson(file);
+  //     setJsonFile(response);
+  //     console.log("response", response);
+  //   }
+  // };
+
+  const handleUpload = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!file) {
+      return;
+    }
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      console.log("sending form data", formData);
+      console.log(typeof formData);
+      const response = await fetch("/api/update-resume-json", {
+        method: "POST",
+        body: formData,
+      });
+      const json = await response.formData();
+      console.log("jsonnn", json);
     } catch (error) {
       console.error(error);
     }
@@ -41,9 +85,7 @@ export default function Home() {
       });
 
       const blob = await response.blob();
-      console.log("blob", blob);
       const url = window.URL.createObjectURL(blob);
-      console.log("url", url);
       setDownloadUrl(url);
     } catch (error) {
       console.error(error);
@@ -67,15 +109,42 @@ export default function Home() {
           for.`}
           </span>
         </Title>
-        <FileInput placeholder={"Click to add your resume"} />
 
-        <form onSubmit={generateDocTEST}>
+        {/* File Input to upload a resume */}
+        <FileInput
+          placeholder={"Click to add your resume (.docx)"}
+          value={file}
+          onChange={setFile}
+          accept=".docx" // Accept only .docx files
+        />
+
+        <Button
+          onClick={handleUpload}
+          mt="md"
+          disabled={!file}
+          variant="outline"
+        >
+          Upload Resume
+        </Button>
+        {file ? <div>'File Uploaded'</div> : <div>No file selected</div>}
+        {jsonFile ? <div>'JSON Uploaded'</div> : <div>No JSON selected</div>}
+
+        <form onSubmit={handleSubmit}>
           <Textarea
             className={"pt-5"}
-            placeholder="add the company values here"
+            placeholder="Add Company Name Here"
+            value={companyName}
+            onChange={(e) => setCompanyName(e.target.value)}
+            label="Company Name"
+            minRows={10}
+            mb="md"
+          />
+          <Textarea
+            className={"pt-5"}
+            placeholder="AI Instructions"
             value={companyValues}
             onChange={(e) => setCompanyValues(e.target.value)}
-            label="Company Values"
+            label="Important Instructions"
             minRows={10}
             mb="md"
           />
@@ -98,7 +167,7 @@ export default function Home() {
           <Button
             component="a"
             href={downloadUrl}
-            download="updated_resume.docx"
+            download={`Marshall_Johnston_${companyName}.docx`}
             mt="md"
             fullWidth
           >
