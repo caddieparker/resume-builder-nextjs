@@ -15,7 +15,6 @@ export async function POST(req: Request) {
       });
     }
 
-    // Get the uploaded file from the request
     const formData = await req.formData();
     const file = formData.get("resume");
 

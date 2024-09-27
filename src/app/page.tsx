@@ -1,11 +1,20 @@
 "use client";
 
 import { FormEvent, useState, useEffect } from "react";
-import { Textarea, Button, Container, Title, FileInput } from "@mantine/core";
+import {
+  Textarea,
+  Button,
+  Container,
+  Title,
+  FileInput,
+  Badge,
+  Group,
+} from "@mantine/core";
 import "@mantine/core/styles.css";
 import { supabase } from "../../lib/supabaseClient"; // Import Supabase client
 import { generateResumeDocx } from "../../lib/services/generateResume";
 import { resumeToJson } from "../../lib/controllers/resumeToJson";
+import { IconTrash } from "@tabler/icons-react";
 
 // Testing import
 import resume from "../../lib/data/resume.json" assert { type: "json" };
@@ -17,17 +26,9 @@ export default function Home() {
   const [file, setFile] = useState<File | null>(null);
   const [jsonFile, setJsonFile] = useState<any | null>(null);
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [downloadUrl, setDownloadUrl] = useState<null | string>(null);
   const [session, setSession] = useState(null);
-
-  // useEffect(() => {
-  //   const fetchSession = async () => {
-  //     const { data } = await supabase.auth.getSession();
-  //     console.log("Session data:", data);
-  //     setSession((data.session as any) ?? null);
-  //   };
-  //   fetchSession();
-  // }, []);
 
   const generateDocTEST = async (e: FormEvent) => {
     e.preventDefault();
@@ -41,16 +42,9 @@ export default function Home() {
     }
   };
 
-  // const handleUpload = async () => {
-  //   if (file) {
-  //     const response = resumeToJson(file);
-  //     setJsonFile(response);
-  //     console.log("response", response);
-  //   }
-  // };
-
   const handleUpload = async (e: FormEvent) => {
     e.preventDefault();
+    setUploading(true);
     if (!file) {
       return;
     }
@@ -58,17 +52,21 @@ export default function Home() {
     formData.append("file", file);
 
     try {
-      console.log("sending form data", formData);
-      console.log(typeof formData);
       const response = await fetch("/api/update-resume-json", {
         method: "POST",
         body: formData,
       });
-      const json = await response.formData();
-      console.log("jsonnn", json);
+      const json = await response.json();
+      console.log("json: ", json);
+      setJsonFile(json);
     } catch (error) {
-      console.error(error);
+      console.error("Error uploading resume:", error);
     }
+    setUploading(false);
+  };
+
+  const removeJsonFile = () => {
+    setJsonFile(null);
   };
 
   const handleSubmit = async (e: FormEvent) => {
@@ -98,7 +96,7 @@ export default function Home() {
     <div>
       <Container>
         <Button variant={"dark"} onClick={generateDocTEST} className={"my-5"}>
-          {loading ? "Updating..." : "Generate Test Doc"}
+          {loading ? "Processing..." : "Generate Test Doc"}
         </Button>
         <Title order={1} my="md" className={"p-10"}>
           Resume Builder
@@ -110,24 +108,40 @@ export default function Home() {
           </span>
         </Title>
 
-        {/* File Input to upload a resume */}
         <FileInput
           placeholder={"Click to add your resume (.docx)"}
           value={file}
           onChange={setFile}
-          accept=".docx" // Accept only .docx files
+          accept=".docx"
         />
-
-        <Button
-          onClick={handleUpload}
-          mt="md"
-          disabled={!file}
-          variant="outline"
-        >
-          Upload Resume
-        </Button>
-        {file ? <div>'File Uploaded'</div> : <div>No file selected</div>}
-        {jsonFile ? <div>'JSON Uploaded'</div> : <div>No JSON selected</div>}
+        <Group className={"flex flex-row items-center !justify-between mt-3"}>
+          <Button
+            onClick={handleUpload}
+            className={"items-center"}
+            disabled={!file}
+            variant="outline"
+          >
+            {uploading
+              ? "Processing..."
+              : jsonFile
+              ? "Upload New Resume"
+              : "Upload Resume"}
+          </Button>
+          {jsonFile && (
+            <Group gap={0}>
+              <Badge className={"items-center"} color="green">
+                Resume Uploaded
+              </Badge>
+              <Button
+                variant={"transparent"}
+                onClick={removeJsonFile}
+                className={"items-center"}
+              >
+                <IconTrash size={20} stroke={1.5} />
+              </Button>
+            </Group>
+          )}
+        </Group>
 
         <form onSubmit={handleSubmit}>
           <Textarea
@@ -157,6 +171,7 @@ export default function Home() {
             required
             minRows={10}
             mb="md"
+            inputSize="xl"
           />
           <Button type="submit" loading={loading} fullWidth variant={"filled"}>
             {loading ? "Updating..." : "Submit Job Description"}
