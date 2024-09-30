@@ -27,7 +27,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       const { data } = await supabase.auth.getSession();
       setSession(data.session); // data.session can be of type Session or null
     };
-
     getSession();
   }, []);
 
@@ -87,9 +86,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </AppShell.Header>
 
             <AppShell.Navbar p="md">
-              {session ? (
+              {session && (
                 <>
-                  {/* Show navigation items and sign out button when user is signed in */}
                   {navBarItems.items.map((item) => (
                     <Button
                       key={item.title}
@@ -107,13 +105,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     {loading ? "Signing Out..." : "Sign Out"}
                   </Button>
                 </>
-              ) : (
-                <Button
-                  className={"m-1"}
-                  onClick={() => router.push("/sign-in")}
-                >
-                  Sign In
-                </Button>
               )}
             </AppShell.Navbar>
 

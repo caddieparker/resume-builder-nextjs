@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState, useEffect } from "react";
+import { FormEvent, useState, useEffect, SetStateAction } from "react";
 import {
   Textarea,
   Button,
@@ -11,10 +11,12 @@ import {
   Group,
 } from "@mantine/core";
 import "@mantine/core/styles.css";
-import { supabase } from "../../lib/supabaseClient"; // Import Supabase client
+import { supabase } from "../../lib/supabaseClient";
 import { generateResumeDocx } from "../../lib/services/generateResume";
-import { resumeToJson } from "../../lib/controllers/resumeToJson";
 import { IconTrash } from "@tabler/icons-react";
+import { useRouter } from "next/navigation";
+import { getUserSession } from "../../lib/services/supabase/auth";
+import { upsertResume, fetchResume } from "../../lib/services/supabase/resume";
 
 // Testing import
 import resume from "../../lib/data/resume.json" assert { type: "json" };
@@ -24,11 +26,37 @@ export default function Home() {
   const [companyValues, setCompanyValues] = useState("");
   const [companyName, setCompanyName] = useState("");
   const [file, setFile] = useState<File | null>(null);
-  const [jsonFile, setJsonFile] = useState<any | null>(null);
+  const [jsonResume, setJsonResume] = useState<any | null>(null);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [downloadUrl, setDownloadUrl] = useState<null | string>(null);
-  const [session, setSession] = useState(null);
+  const [session, setSession] = useState<SetStateAction<any | null>>(null);
+
+  const router = useRouter();
+
+  const checkSession = async () => {
+    const {
+      data: { session },
+      error,
+    } = await supabase.auth.getSession();
+    console.log("session11111", session);
+    if (!session || error) {
+      router.push("/sign-in");
+    } else {
+      setSession(session);
+      const user = session.user;
+      if (user) {
+        const resume = await fetchResume(user.id);
+        if (resume) {
+          setJsonResume(resume.json_resume);
+        }
+      }
+    }
+  };
+
+  useEffect(() => {
+    checkSession();
+  }, [router]);
 
   const generateDocTEST = async (e: FormEvent) => {
     e.preventDefault();
@@ -57,8 +85,9 @@ export default function Home() {
         body: formData,
       });
       const json = await response.json();
-      console.log("json: ", json);
-      setJsonFile(json);
+      const user = await getUserSession();
+      upsertResume(user?.id, json);
+      setJsonResume(json);
     } catch (error) {
       console.error("Error uploading resume:", error);
     }
@@ -66,7 +95,7 @@ export default function Home() {
   };
 
   const removeJsonFile = () => {
-    setJsonFile(null);
+    setJsonResume(null);
   };
 
   const handleSubmit = async (e: FormEvent) => {
@@ -88,7 +117,6 @@ export default function Home() {
     } catch (error) {
       console.error(error);
     }
-
     setLoading(false);
   };
 
@@ -123,11 +151,11 @@ export default function Home() {
           >
             {uploading
               ? "Processing..."
-              : jsonFile
+              : jsonResume
               ? "Upload New Resume"
               : "Upload Resume"}
           </Button>
-          {jsonFile && (
+          {jsonResume && (
             <Group gap={0}>
               <Badge className={"items-center"} color="green">
                 Resume Uploaded

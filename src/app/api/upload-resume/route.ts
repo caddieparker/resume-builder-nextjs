@@ -2,7 +2,6 @@ import { supabase } from "../../../../lib/supabaseClient";
 
 export async function POST(req: Request) {
   try {
-    // Get the session from Supabase
     const { data, error } = await supabase.auth.getSession();
 
     console.log("Session data @ upload-resume:", data);
@@ -25,7 +24,6 @@ export async function POST(req: Request) {
       });
     }
 
-    // Upload the file to Supabase Storage
     const fileName = file instanceof File ? file.name : "unknown";
 
     const { error: uploadError } = await supabase.storage

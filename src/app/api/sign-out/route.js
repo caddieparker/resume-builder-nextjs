@@ -1,4 +1,3 @@
-// /app/api/sign-out/route.js
 import { supabase } from "../../../../lib/supabaseClient";
 
 export async function POST(req) {

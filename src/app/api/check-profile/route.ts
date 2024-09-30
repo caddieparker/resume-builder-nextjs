@@ -5,7 +5,6 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
   const supabase = createRouteHandlerClient({ cookies });
 
-  // Get the authenticated user
   const {
     data: { user },
     error: authError,
@@ -20,7 +19,6 @@ export async function POST(req: Request) {
 
   const userId = user.id;
 
-  // Check if the user already exists in the 'users' table
   const { data: existingUser, error: fetchError } = await supabase
     .from("users")
     .select("*")
@@ -28,7 +26,6 @@ export async function POST(req: Request) {
     .single();
 
   if (!existingUser) {
-    // If the user does not exist, insert them into the 'users' table
     const { error: insertError } = await supabase
       .from("users")
       .insert({ id: userId, email: user.email });
